@@ -18,16 +18,6 @@ import (
 	"github.com/BurntSushi/xgbutil/xwindow"
 )
 
-var (
-	fg = xgraphics.BGRA{B: 0xff, G: 0xff, R: 0xff, A: 0xff}
-
-	// The size of the text.
-	size = 100.0
-
-	// The text to draw.
-	msg = "Capturing keyboard input, type CTRL-ESC to exit."
-)
-
 // newGradientWindow creates a new X window, paints the initial gradient
 // image, and listens for ConfigureNotify events. (A new gradient image must
 // be painted in response to each ConfigureNotify event, since a
