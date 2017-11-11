@@ -5,8 +5,10 @@ import (
 	"bytes"
 	"image"
 	"image/color"
-	"log"
 	"math/rand"
+	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/BurntSushi/xgb/xproto"
 	"github.com/BurntSushi/xgbutil"
@@ -25,6 +27,15 @@ import (
 func newGradientWindow(X *xgbutil.XUtil, width, height int,
 	start, end color.RGBA) {
 
+	wid := X.RootWin()
+
+	keybind.Initialize(X)
+	if err := keybind.GrabKeyboard(X, wid); err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Grabbing keyboard input...")
+	}
+
 	// Generate a new window id.
 	win, err := xwindow.Generate(X)
 	if err != nil {
@@ -32,17 +43,25 @@ func newGradientWindow(X *xgbutil.XUtil, width, height int,
 	}
 
 	// Create the window and die if it fails.
-	err = win.CreateChecked(X.RootWin(), 0, 0, width, height, 0)
-	if err != nil {
+	if err := win.CreateChecked(wid, 0, 0, width, height, 0); err != nil {
 		log.Fatal(err)
 	}
 
 	// Get EventMask events
 	win.Listen(xproto.EventMaskKeyPress, xproto.EventMaskKeyRelease)
 
-	// Paint the initial gradient to the window and then map the window.
-	renderGradient(X, win.Id, width, height, start, end)
+	go func() {
+		for {
+			// Paint the initial gradient to the window and then map the window.
+			renderGradient(X, win.Id, width, height, start, end)
+
+			time.Sleep(1 * time.Second)
+		}
+	}()
+
 	win.Map()
+
+	win.Listen(xproto.EventMaskKeyPress)
 
 	xevent.KeyPressFun(
 		func(X *xgbutil.XUtil, e xevent.KeyPressEvent) {
@@ -51,13 +70,13 @@ func newGradientWindow(X *xgbutil.XUtil, width, height int,
 			// of the modifiers/keycode tuple.
 			// N.B. It's working for me, but probably isn't 100% correct in
 			// all environments yet.
-			//modStr := keybind.ModifierString(e.State)
-			//keyStr := keybind.LookupString(X, e.State, e.Detail)
-			//if len(modStr) > 0 {
-			//	log.Printf("Key: %s-%s\n", modStr, keyStr)
-			//} else {
-			//	log.Println("Key:", keyStr)
-			//}
+			modStr := keybind.ModifierString(e.State)
+			keyStr := keybind.LookupString(X, e.State, e.Detail)
+			if len(modStr) > 0 {
+				log.Printf("Key: %s-%s", modStr, keyStr)
+			} else {
+				log.Printf("Key: %s", keyStr)
+			}
 
 			if keybind.KeyMatch(X, "Escape", e.State, e.Detail) {
 				if e.State&xproto.ModMaskControl > 0 {
@@ -65,7 +84,7 @@ func newGradientWindow(X *xgbutil.XUtil, width, height int,
 					xevent.Quit(X)
 				}
 			}
-		}).Connect(X, win.Id)
+		}).Connect(X, wid)
 
 	if err = ewmh.WmStateReq(X, win.Id, ewmh.StateToggle,
 		"_NET_WM_STATE_FULLSCREEN"); err != nil {
@@ -110,7 +129,7 @@ func renderGradient(X *xgbutil.XUtil, wid xproto.Window, width, height int,
 	ximg.XSurfaceSet(wid)
 
 	// Render the message text
-	renderText(ximg)
+	renderText(ximg, rand.Intn(width/3), rand.Intn(height-100))
 
 	// XDraw will draw the contents of ximg to its corresponding pixmap.
 	ximg.XDraw()
@@ -123,7 +142,7 @@ func renderGradient(X *xgbutil.XUtil, wid xproto.Window, width, height int,
 	ximg.Destroy()
 }
 
-func renderText(ximg *xgraphics.Image) {
+func renderText(ximg *xgraphics.Image, x, y int) {
 	// Load the font.
 	fontData, err := Asset("LCD_Solid.ttf")
 	if err != nil {
@@ -139,7 +158,7 @@ func renderText(ximg *xgraphics.Image) {
 	}
 
 	// Now draw some text
-	_, _, err = ximg.Text(10, 10, newRandomColor(), size, font, msg)
+	_, _, err = ximg.Text(x, y, newRandomColor(), size, font, msg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -148,7 +167,8 @@ func renderText(ximg *xgraphics.Image) {
 	secw, sech := xgraphics.Extents(font, size, msg)
 
 	// Now repaint on the region that we drew text on. Then update the screen.
-	bounds := image.Rect(10, 10, 10+secw, 10+sech)
+	bounds := image.Rect(x, y, x+secw, y+sech)
+
 	ximg.SubImage(bounds).(*xgraphics.Image).XDraw()
 }
 
@@ -169,6 +189,7 @@ func rawGeometry(xu *xgbutil.XUtil, win xproto.Drawable) (xrect.Rect, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return xrect.New(int(xgeom.X), int(xgeom.Y),
 		int(xgeom.Width), int(xgeom.Height)), nil
 }
@@ -177,7 +198,8 @@ func rawGeometry(xu *xgbutil.XUtil, win xproto.Drawable) (xrect.Rect, error) {
 func rootGeometry(xu *xgbutil.XUtil) xrect.Rect {
 	geom, err := rawGeometry(xu, xproto.Drawable(xu.RootWin()))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
+
 	return geom
 }

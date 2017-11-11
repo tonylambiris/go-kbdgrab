@@ -1,12 +1,12 @@
 package main
 
 import (
-	"log"
 	"math/rand"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/BurntSushi/xgbutil"
-	"github.com/BurntSushi/xgbutil/keybind"
 	"github.com/BurntSushi/xgbutil/xevent"
 )
 
@@ -27,12 +27,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	keybind.Initialize(X)
-
 	// Create a gradient window with random colors.
 	geom := rootGeometry(X)
-	size = float64(geom.Height()) / float64(geom.Width()) / .005
-	newGradientWindow(X, geom.Width(), geom.Height(), newRandomColor(), newRandomColor())
+	size = float64(geom.Height()) / float64(geom.Width()) * 100
+
+	newGradientWindow(X, geom.Width(), geom.Height(),
+		newRandomColor(), newRandomColor())
 
 	xevent.Main(X)
 }

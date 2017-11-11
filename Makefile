@@ -11,9 +11,18 @@ all: deps bundle build
 build:
 	@go build -ldflags "-s -w -X main.Type=${BUILDTYPE}" -o kbdgrab
 
-deps:
-	@go get github.com/BurntSushi/xgbutil/...
-	@go get github.com/jteeuwen/go-bindata/...
+# To vendor an external dependency, run: govendor fetch path/to/repo
+deps: godeps
+	@echo "Fetching missing dependencies..."
+	@govendor fetch +missing
+	@echo "Removing unused dependencies..."
+	@govendor remove +unused
+	@echo "Running govendor sync..."
+	@govendor sync -v
+
+godeps:
+	@echo "Installing/updating go dependencies..."
+	@go get -u github.com/kardianos/govendor
 
 bundle:
 	@go-bindata LCD_Solid.ttf
