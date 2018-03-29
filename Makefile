@@ -23,6 +23,7 @@ deps: godeps
 godeps:
 	@echo "Installing/updating go dependencies..."
 	@go get -u github.com/kardianos/govendor
+	@go get -u github.com/kevinburke/go-bindata/...
 
 bundle:
 	@go-bindata LCD_Solid.ttf
