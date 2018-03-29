@@ -14,7 +14,7 @@ build:
 # To vendor an external dependency, run: govendor fetch path/to/repo
 deps: godeps
 	@echo "Fetching missing dependencies..."
-	@govendor fetch +missing
+	@govendor fetch +outside
 	@echo "Removing unused dependencies..."
 	@govendor remove +unused
 	@echo "Running govendor sync..."

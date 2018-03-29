@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"time"
 
+	_ "github.com/kevinburke/go-bindata"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/BurntSushi/xgb/xproto"

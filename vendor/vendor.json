@@ -123,6 +123,12 @@
 			"revisionTime": "2016-09-19T17:57:55Z"
 		},
 		{
+			"checksumSHA1": "PfKwKcs1BctdXuSDla9wPiYhiuI=",
+			"path": "github.com/kevinburke/go-bindata",
+			"revision": "2197b050f0e0040db1aa5a517acb640f0fd5b73a",
+			"revisionTime": "2018-03-06T03:02:31Z"
+		},
+		{
 			"checksumSHA1": "BYvROBsiyAXK4sq6yhDe8RgT4LM=",
 			"path": "github.com/sirupsen/logrus",
 			"revision": "89742aefa4b206dcf400792f3bd35b542998eb3b",
