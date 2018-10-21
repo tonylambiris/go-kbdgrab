@@ -8,9 +8,6 @@ import (
 	"math/rand"
 	"time"
 
-	_ "github.com/kevinburke/go-bindata"
-	log "github.com/sirupsen/logrus"
-
 	"github.com/BurntSushi/xgb/xproto"
 	"github.com/BurntSushi/xgbutil"
 	"github.com/BurntSushi/xgbutil/ewmh"
@@ -19,6 +16,8 @@ import (
 	"github.com/BurntSushi/xgbutil/xgraphics"
 	"github.com/BurntSushi/xgbutil/xrect"
 	"github.com/BurntSushi/xgbutil/xwindow"
+	_ "github.com/jteeuwen/go-bindata"
+	log "github.com/sirupsen/logrus"
 )
 
 // newGradientWindow creates a new X window, paints the initial gradient
