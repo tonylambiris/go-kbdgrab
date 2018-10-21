@@ -24,8 +24,8 @@ deps: godeps
 
 godeps:
 	@echo "Installing/updating go dependencies..."
-	@go get -u github.com/golang/dep/cmd/dep
-	@go get -u github.com/kevinburke/go-bindata/...
+	@go get -v -u github.com/golang/dep/cmd/dep
+	@go get -v -u github.com/jteeuwen/go-bindata/...
 
 update:
 	@echo "Updating vendored dependencies..."

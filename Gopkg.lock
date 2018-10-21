@@ -40,7 +40,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:61772e18176a432f1f0f75cff34ee8fad3fa55d5d9c09d90931516a7d3ba8193"
+  digest = "1:8234f6153d39580fc88b8ea1ac305616f40461f3fea553f5670b4542d1ce0b36"
   name = "github.com/BurntSushi/xgbutil"
   packages = [
     ".",
@@ -50,6 +50,7 @@
     "mousebind",
     "xevent",
     "xgraphics",
+    "xinerama",
     "xprop",
     "xrect",
     "xwindow",
@@ -58,12 +59,20 @@
   revision = "f7c97cef3b4e6c88280a5a7091c3314e815ca243"
 
 [[projects]]
-  digest = "1:d2b5a274ff440022ebf4e04dbd1d0a2c735269d40598478c5283f07db1ef0ccd"
-  name = "github.com/kevinburke/go-bindata"
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  pruneopts = "UT"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
+
+[[projects]]
+  digest = "1:0015060922f1b2e04469224e2ed82f0a67abbfee9a0a91852cf4980b91bf11d6"
+  name = "github.com/jteeuwen/go-bindata"
   packages = ["."]
   pruneopts = "UT"
-  revision = "06af60a4461b70d84a2b173d92f9f425d78baf55"
-  version = "v3.11.0"
+  revision = "bbd0c6e271208dce66d8fda4bc536453cd27fc4a"
+  version = "v3.0.7"
 
 [[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
@@ -110,9 +119,11 @@
     "github.com/BurntSushi/xgbutil/keybind",
     "github.com/BurntSushi/xgbutil/xevent",
     "github.com/BurntSushi/xgbutil/xgraphics",
+    "github.com/BurntSushi/xgbutil/xinerama",
     "github.com/BurntSushi/xgbutil/xrect",
     "github.com/BurntSushi/xgbutil/xwindow",
-    "github.com/kevinburke/go-bindata",
+    "github.com/davecgh/go-spew/spew",
+    "github.com/jteeuwen/go-bindata",
     "github.com/sirupsen/logrus",
   ]
   solver-name = "gps-cdcl"
