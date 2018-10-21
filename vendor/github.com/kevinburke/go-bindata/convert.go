@@ -7,7 +7,6 @@ package bindata
 import (
 	"bytes"
 	"fmt"
-	"go/format"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -52,12 +51,15 @@ func Translate(c *Config) error {
 	}
 
 	for _, asset := range toc {
-		relative, _ := filepath.Rel(wd, asset.Path)
-		if _, err = fmt.Fprintf(buf, "// %s\n", filepath.ToSlash(relative)); err != nil {
+		relative, err := filepath.Rel(wd, asset.Path)
+		if err != nil {
+			return err
+		}
+		if _, err = fmt.Fprintf(buf, "// %s (%s)\n", filepath.ToSlash(relative), bits(asset.Size)*byte_); err != nil {
 			return err
 		}
 	}
-	if _, err = fmt.Fprint(buf, "\n"); err != nil {
+	if _, err := fmt.Fprint(buf, "\n"); err != nil {
 		return err
 	}
 
@@ -104,12 +106,8 @@ func Translate(c *Config) error {
 	if err := writeRestore(buf); err != nil {
 		return err
 	}
-	fmted, err := format.Source(buf.Bytes())
-	if err != nil {
-		return err
-	}
 
-	return safefileWriteFile(c.Output, fmted, 0666)
+	return safefileWriteFile(c.Output, buf.Bytes(), 0666)
 }
 
 // Implement sort.Interface for []os.FileInfo based on Name()
@@ -219,6 +217,7 @@ func findFiles(dir, prefix string, recursive bool, toc *[]Asset, ignore []*regex
 		if err != nil {
 			return err
 		}
+		asset.Size = file.Size()
 		*toc = append(*toc, asset)
 	}
 

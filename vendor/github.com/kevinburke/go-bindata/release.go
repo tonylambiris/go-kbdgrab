@@ -256,6 +256,7 @@ func header_uncompressed_memcopy(w io.Writer) error {
 	"strings"
 	"time"
 )
+
 `)
 	return err
 }
@@ -385,7 +386,7 @@ func uncompressed_memcopy(w io.Writer, asset *Asset, r io.Reader) error {
 	if err != nil {
 		return err
 	}
-	if utf8.Valid(b) && !bytes.Contains(b, []byte{0}) {
+	if len(b) > 0 && utf8.Valid(b) && !bytes.Contains(b, []byte{0}) {
 		w.Write(sanitize(b))
 	} else {
 		fmt.Fprintf(w, "%+q", b)
