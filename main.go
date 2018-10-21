@@ -5,12 +5,7 @@ import (
 	"time"
 
 	"github.com/BurntSushi/xgbutil"
-	"github.com/BurntSushi/xgbutil/ewmh"
 	"github.com/BurntSushi/xgbutil/xevent"
-	"github.com/BurntSushi/xgbutil/xinerama"
-	"github.com/BurntSushi/xgbutil/xrect"
-	"github.com/BurntSushi/xgbutil/xwindow"
-	"github.com/davecgh/go-spew/spew"
 	log "github.com/sirupsen/logrus"
 )
 
