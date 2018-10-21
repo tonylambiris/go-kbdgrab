@@ -4,13 +4,26 @@ import (
 	"math/rand"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/BurntSushi/xgbutil"
+	"github.com/BurntSushi/xgbutil/ewmh"
 	"github.com/BurntSushi/xgbutil/xevent"
+	"github.com/BurntSushi/xgbutil/xinerama"
+	"github.com/BurntSushi/xgbutil/xrect"
+	"github.com/BurntSushi/xgbutil/xwindow"
+	"github.com/davecgh/go-spew/spew"
+	log "github.com/sirupsen/logrus"
+)
+
+const (
+	Name = "kbdgrab"
+	Path = "github.com/tonylambiris/go-kbdgrab"
 )
 
 var (
+	// compile-time variables
+	Build string
+	Type  string
+
 	// The size of the text (scaled dynamically below)
 	size = 0.0
 
@@ -19,7 +32,8 @@ var (
 )
 
 func main() {
-	//fmt.Sprintf("%s (%s build)", main.Build, main.Type)
+	log.Printf("%s %s (%s) [%s]", Name, Build, Type, Path)
+
 	rand.Seed(time.Now().UnixNano())
 
 	X, err := xgbutil.NewConn()
