@@ -14,29 +14,23 @@ endif
 
 all: deps bundle build
 
-build:
-	@go build -ldflags "-s -w -X main.Build=${BUILDTAG} -X main.Type=${BUILDTYPE}" \
-		-gcflags="all=-trimpath=${GOPATH}/src" \
-		-asmflags="all=-trimpath=${GOPATH}/src" \
+build: bundle
+	@go build -trimpath -ldflags \
+		"-s -w -X main.Build=${BUILDTAG} -X main.Type=${BUILDTYPE}" \
 		-o kbdgrab
 
-# To vendor an external dependency, run: dep -add path/to/repo
-deps: godeps
-	@echo "Running dependency check..."
-	@dep check
-
-godeps:
-	@echo "Installing/updating go dependencies..."
-	@go get -v github.com/jteeuwen/go-bindata/...
-
-update:
-	@echo "Updating vendored dependencies..."
-	@dep ensure -update
-
-bundle:
+bundle: deps
 	@go-bindata LCD_Solid.ttf
 
 clean:
 	@rm -f kbdgrab bindata.go
+
+tidy:
+	@echo "Tidying up dependencies..."
+	@go mod tidy
+
+deps:
+	@echo "Getting required dependencies..."
+	@go get -u github.com/kevinburke/go-bindata/...
 
 .PHONY: build deps bundle
