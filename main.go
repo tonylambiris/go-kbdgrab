@@ -38,7 +38,7 @@ func main() {
 
 	// Create a gradient window with random colors.
 	geom := rootGeometry(X)
-	size = float64(geom.Height()) / float64(geom.Width()) * 100
+	size = float64(geom.Height()) / float64(geom.Width()) * 150
 
 	newGradientWindow(X, geom.Width(), geom.Height(),
 		newRandomColor(), newRandomColor())
